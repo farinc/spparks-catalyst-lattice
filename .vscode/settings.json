@@ -1,0 +1,4 @@
+{
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
+    "C_Cpp.default.compileCommands": "/home/forrest/Projects/spparks-catalyst-lattice/builddir/compile_commands.json"
+}

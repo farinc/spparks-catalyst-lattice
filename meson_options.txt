@@ -1,0 +1,20 @@
+option('mpi', type: 'feature', value: 'auto',
+  description: 'Enable MPI (auto/disabled/enabled). If disabled, use src/STUBS MPI stubs.')
+
+option('openmp', type: 'feature', value: 'disabled',
+  description: 'Enable OpenMP (if supported by toolchain).')
+
+option('build_exe', type: 'boolean', value: true,
+  description: 'Build spparks executable.')
+
+option('build_shared', type: 'boolean', value: true,
+  description: 'Build shared library libspparks.so.')
+
+option('build_static', type: 'boolean', value: true,
+  description: 'Build static library libspparks.a.')
+
+# Cluster/vendor MPI escape hatches (mirrors “machine Makefile” knobs)
+option('extra_cxxargs', type: 'array', value: [],
+  description: 'Extra C++ compiler args (e.g., -DMPICH_SKIP_MPICXX).')
+option('extra_linkargs', type: 'array', value: [],
+  description: 'Extra linker args (e.g., -lmpich -lmpl -lpthread -lstdc++).')
