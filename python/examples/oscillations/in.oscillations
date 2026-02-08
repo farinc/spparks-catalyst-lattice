@@ -1,0 +1,34 @@
+seed 12345
+app_style surface/rxn
+solve_style tree
+
+dimension 2
+lattice sq/4n 1.0
+region box block 0 128 0 128 -0.5 0.5
+create_box box
+create_sites box
+
+# surface species mapping (0 = *, 1 = A*, 2 = B*)
+species A 1
+species B 2
+
+# initialize lattice
+set site value 0
+set site value 1 fraction 0.25 if site = 0
+set site value 2 fraction 0.25 if site = 0
+
+# gas concentration for k1 c_A
+gas A 1.0
+
+# surface diffusion
+diffusion A 1000
+diffusion B 1000
+
+# A* + * -> 2A*   rate = k1 * c_A
+reaction A * -> A A 4.0 gas A
+
+# A* + B* -> 2B*  rate = k2
+reaction A B -> B B 4.0
+
+# B* + * -> 2* + B(g)  rate = k3
+reaction B * -> * * 4.0

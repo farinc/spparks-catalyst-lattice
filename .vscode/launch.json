@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/builddir/src/spparks",
             "cwd": ".",
-            "args": ["-in", "${workspaceFolder}/test.in"],
+            "args": ["-in", "${workspaceFolder}/examples/${input:example}", "-log", "${workspaceFolder}/run/out.log"],
             "stopAtEntry": false,
             "environment": [],
             "externalConsole": false,
@@ -27,7 +27,28 @@
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "Python: oscillations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/python/examples/oscillations/oscillations.py",
+            "cwd": "${workspaceFolder}/python/examples/oscillations",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/python",
+                "LD_LIBRARY_PATH": "${workspaceFolder}/.pixi/envs/default/lib:${workspaceFolder}/buildir/src:${env:LD_LIBRARY_PATH}",
+                "TERMINFO": ".pixi/envs/default/share/terminfo"
+            }
         }
-
+    ],
+    "inputs": [
+        {
+            "id": "example",
+            "type": "pickString",
+            "options": ["chemistry/in.chemistry", "surface_rxn/in.oscillations"],
+            "description": "Pick an spparks example",
+            "default": "surface_rxn"
+        }
     ]
 }

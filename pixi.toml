@@ -1,0 +1,16 @@
+[workspace]
+authors = ["Forrest Ramirez <forrest.ram64@gmail.com>"]
+channels = ["conda-forge"]
+name = "spparks-catalyst-lattice"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+numpy = ">=2.4.2,<3"
+ipykernel = ">=7.1.0,<8"
+mpi4py = ">=4.1.1,<5"
+mpltern = ">=1.0.4,<2"
+openmpi = ">=5.0.8,<6"
+compilers = ">=1.11.0,<2"
