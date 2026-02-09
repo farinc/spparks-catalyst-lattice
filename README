@@ -1,5 +1,9 @@
 This is the SPPARKS software package. This is a modification to model surface reaction chemistry in addition to general improvements to the spparks Python interface for Python 3 alongside modifying the project compiler to use meson for ease of use. 
 
+To build this as a shared library for use in python, install the Pixi enivroment (`pixi install`), activate it in your shell (`pixi shell`) in order to compile against the python toolchain, then run `meson setup builddir -Ddefault_library=shared`. Then you can run the python examples (just make sure that LD_LIBRARY_PATH is set, for reference see the vscode `launch.json`). 
+
+Pisst, if your running this in vscode and dont want to run the debugger, just do Ctrl+F5 to run your last launch configuration without the debugger.
+
 SPPARKS stands for Stochastic Parallel PARticle Kinetic Simulator.
 ----------------------------------------------------------------------
 
