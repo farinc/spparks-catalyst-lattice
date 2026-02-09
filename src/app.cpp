@@ -170,6 +170,8 @@ void *App::extract(char *name)
   if (strcmp(name,"boxzlo") == 0) return (void *) &domain->boxzlo;
   if (strcmp(name,"boxzhi") == 0) return (void *) &domain->boxzhi;
 
+  if (strcmp(name,"time") == 0) return (void *) &time;
+
   if (strcmp(name,"nglobal") == 0) return (void *) &nglobal;
   if (strcmp(name,"nlocal") == 0) return (void *) &nlocal;
 
@@ -244,4 +246,3 @@ int App::contiguous_sites()
   if (all != nglobal) return 0;
   return 1;
 }
-

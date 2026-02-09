@@ -1,16 +1,6 @@
 /* ----------------------------------------------------------------------
    AppSurfaceRxn: on-lattice surface chemistry KMC for SPPARKS
 
-   This app is patterned after app_ising.{h,cpp} in SPPARKS (08 Oct 2025 build),
-   i.e., it:
-     - sets ninteger/ndouble and calls create_arrays() in the constructor
-     - binds pointers in grow_app() via iarray[0]
-     - calls solve->update() after each KMC event (like AppIsing)
-
-   Per-site integer field:
-     i1 (aka "site") stores occupancy/state.
-     By convention: 0 = EMPTY (*)
-
    Generic surface-chemistry interface (via input commands):
      species <name> <id>           # map surface species name to integer id
      gas <name> <conc>             # define gas species concentration
@@ -24,20 +14,10 @@
      reaction <r1> <r2> -> <p1> <p2> <rate> [gas <name>]
                                   # adjacency-required surface reaction
 
-   If any of the commands above define events, the app runs in "generic"
-   mode using those events. Otherwise it falls back to the legacy 3-reaction
-   model with k1/k2/k3 (see below).
-
    Gas dependencies:
      If "gas <name>" is provided for an event, its rate is
        k = k0 * c_gas
      where c_gas is the concentration defined by the gas command.
-
-   Legacy default reactions (when no events are defined):
-     0 = EMPTY (*), 1 = A*, 2 = B*
-     r1: A* + *  -> A* + A*        rate k1
-     r2: A* + B* -> B* + B*        rate k2
-     r3: B* + *  -> * + * + B(g)   rate k3
 
    Ownership rule:
      For each neighbor pair (i,j), only process if i < j. This prevents double
@@ -96,9 +76,6 @@ class AppSurfaceRxn : public AppLattice {
     unsigned char flip; // 1 if pair matched in reverse order
   };
 
-  // parameters
-  double k1_, k2_, k3_;
-
   // generic reaction bookkeeping
   std::vector<Reaction> unary_rxns_;
   std::vector<Reaction> pair_rxns_;
@@ -122,7 +99,7 @@ class AppSurfaceRxn : public AppLattice {
   // scratch list for solver updates (same pattern as app_ising)
   int *sites_;   // list of solver-site indices to update
 
-  enum : int { EMPTY = 0, A_STAR = 1, B_STAR = 2 };
+  enum : int { EMPTY = 0 };
 
   inline int  state(int i) const      { return occ_[i]; }
   inline void set_state(int i, int s) { occ_[i] = s; }
@@ -134,14 +111,6 @@ class AppSurfaceRxn : public AppLattice {
     if (si == rxn.r2 && sj == rxn.r1) return 1;
     return -1;
   }
-
-  inline bool match_r1(int si, int sj) const { return (si==A_STAR && sj==EMPTY) || (si==EMPTY && sj==A_STAR); }
-  inline bool match_r2(int si, int sj) const { return (si==A_STAR && sj==B_STAR) || (si==B_STAR && sj==A_STAR); }
-  inline bool match_r3(int si, int sj) const { return (si==B_STAR && sj==EMPTY) || (si==EMPTY && sj==B_STAR); }
-
-  void apply_r1(int i, int j, int si, int sj);
-  void apply_r2(int i, int j, int si, int sj);
-  void apply_r3(int i, int j, int si, int sj);
 
   inline void maybe_add_update(int lattice_i, int &nsites);
 

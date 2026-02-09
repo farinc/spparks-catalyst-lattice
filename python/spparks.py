@@ -104,29 +104,42 @@ class spparks:
 
   def extract(self,name,type):
     name = _to_bytes(name)
+    name_str = name.decode('utf-8', errors='ignore')
     if type == 0:
       self.lib.spparks_extract.restype = POINTER(c_int)
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr[0]
     if type == 1:
       self.lib.spparks_extract.restype = POINTER(c_int)
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr
     if type == 2:
       self.lib.spparks_extract.restype = POINTER(POINTER(c_int))
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr
     if type == 3:
       self.lib.spparks_extract.restype = POINTER(c_double)
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr[0]
     if type == 4:
       self.lib.spparks_extract.restype = POINTER(c_double)
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr
     if type == 5:
       self.lib.spparks_extract.restype = POINTER(POINTER(c_double))
       ptr = self.lib.spparks_extract(self.spk,name)
+      if not ptr:
+        raise Exception(f"spparks_extract('{name_str}') returned NULL. Rebuild libspparks.so?")
       return ptr
     return None
 

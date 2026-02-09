@@ -29,7 +29,7 @@
             ]
         },
         {
-            "name": "Python: oscillations",
+            "name": "Python: oscillations.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/python/examples/oscillations/oscillations.py",
@@ -37,8 +37,8 @@
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/python",
-                "LD_LIBRARY_PATH": "${workspaceFolder}/.pixi/envs/default/lib:${workspaceFolder}/buildir/src:${env:LD_LIBRARY_PATH}",
-                "TERMINFO": ".pixi/envs/default/share/terminfo"
+                "LD_LIBRARY_PATH": "${workspaceFolder}/.pixi/envs/default/lib:${workspaceFolder}/${input:builddir}/src:${env:LD_LIBRARY_PATH}",
+                "TERMINFO": "${workspaceFolder}/.pixi/envs/default/share/terminfo"
             }
         }
     ],
@@ -49,6 +49,12 @@
             "options": ["chemistry/in.chemistry", "surface_rxn/in.oscillations"],
             "description": "Pick an spparks example",
             "default": "surface_rxn"
+        },
+        {
+            "id": "builddir",
+            "type": "promptString",
+            "description": "Specify the (relative) build directory",
+            "default": "builddir"
         }
     ]
 }

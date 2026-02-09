@@ -4,12 +4,8 @@ import matplotlib as mpl
 import mpltern  # noqa: F401
 import numpy as np
 from pathlib import Path
-import sys
 from mpi4py import MPI
 from spparks import spparks
-
-TOTAL_TIME = 100.0
-DT = 0.1
 
 def plot_ternary(ax: Axes, ts, coverage, *, ts_min=-1, ts_max=-1):
     if ts_min == -1:
@@ -69,9 +65,13 @@ def _coverage_from_site(site, nglobal, comm):
     return global_counts / float(nglobal)
 
 
-def main():
-    
+def main(total_time=5, dt_min=1e-5):
+    if hasattr(MPI,"Is_initialized") and not MPI.Is_initialized():
+        MPI.Init()
+
     comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+
     spk = spparks(comm=comm)
 
     input_file = Path(__file__).with_name("in.oscillations")
@@ -83,11 +83,11 @@ def main():
     times = []
     coverages = []
 
-    t = 0.0
-    while t < TOTAL_TIME - 1e-12:
-        dt = min(DT, TOTAL_TIME - t)
+    t = spk.extract("time", 3)
+    while t < total_time - 1e-12:
+        dt = min(dt_min, total_time - t)
         spk.command(f"run {dt}")
-        t += dt
+        t = spk.extract("time", 3)
 
         coverage = _coverage_from_site(site, nglobal, comm)
         times.append(t)
@@ -96,13 +96,13 @@ def main():
     times = np.asarray(times)
     coverages = np.vstack(coverages) if coverages else np.zeros((0, 3))
 
-    
-    fig_ternary = plt.figure(constrained_layout=True, dpi=300)
-    ax = fig_ternary.add_subplot(111, projection="ternary")
-    sc_handles = plot_ternary(ax, times, coverages)
-    cbar = fig_ternary.colorbar(sc_handles[0], ax=ax, shrink=0.50, pad=0.1)
-    cbar.set_label("Time")
-    plt.show()
+    if rank == 0:
+        fig_ternary = plt.figure(constrained_layout=True, dpi=300)
+        ax = fig_ternary.add_subplot(111, projection="ternary")
+        sc_handles = plot_ternary(ax, times, coverages)
+        cbar = fig_ternary.colorbar(sc_handles[0], ax=ax, shrink=0.50, pad=0.1)
+        cbar.set_label("Time")
+        plt.show()
 
 
 if __name__ == "__main__":
